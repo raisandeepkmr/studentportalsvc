@@ -83,6 +83,15 @@ public class SecurityService {
         return null;
     }
 
+    public String deleteSchedule() {
+        sectionRepository.deleteAll();
+        return "All schedule cleared!";
+    }
+
+    public List<Section> getAllSchedule() {
+        return sectionRepository.findAll();
+    }
+
     public List<Section> generateSchedule() {
         List<ClassRoom> classRooms = classRoomRepository.findAll();
         List<String> classRoomsStr = classRooms.stream().map(x -> x.getName()).toList();
@@ -97,29 +106,20 @@ public class SecurityService {
         for(String str: courseAndDays) {
             String courseName = str.split(",")[0];
             Integer dayInd = Integer.parseInt(str.split(",")[1]);
-            Date courseTime = dailyTimings.get(dayInd);
-            String room = timeTableUtil.getRoomSlot(dayInd);
+            String roomStr = timeTableUtil.getRoomSlot(dayInd);
+            String room = roomStr.split(",")[0];
+            Date courseTime = new Date(dailyTimings.get(Integer.parseInt(roomStr.split(",")[1])).getTime() + TimeUnit.DAYS.toMillis(dayInd));
 
             Section section = new Section();
             section.setTime(courseTime.toString());
             section.setCourseId(courseName);
             section.setRoomId(room);
-            section.setAvailableSpace(classRooms.stream().filter(x-> x.getId().equals(room)).findFirst().get().getCapacity());
+            section.setAvailableSpace(classRooms.stream().filter(x-> x.getName().equals(room)).findFirst().get().getCapacity());
             section.setDays(CommonUtil.getDaynameFromDate(courseTime));
             section.setFacultyId(courses.stream().filter(x-> x.getCourseId().equals(courseName)).findFirst().get().getFacultyId());
             sections.add(section);
         }
-//        List<String> courseAndTiming = new ArrayList<>();
-//
-//        Map<Integer, Date> classAndDays = timeTableUtil.getWeekDays();
-//
-//        Section session = sectionRepository.save(new Section());
-//        if(session != null && session.getToken() != null && session.getToken().length() > 0) {
-//            LoginResponse response = LoginResponse.builder()
-//                    .token(session.getToken())
-//                    .build();
-//            return response;
-//        }
+        for(Section section: sections) sectionRepository.save(section);
         return sections;
     }
 }

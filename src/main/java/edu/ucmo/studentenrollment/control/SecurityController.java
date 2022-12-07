@@ -29,4 +29,14 @@ public class SecurityController {
     public List<Section> generateSchedule() {
         return securityService.generateSchedule();
     }
+
+    @GetMapping(path = "/timetable/all")
+    public List<Section> getAllSchedule() {
+        return securityService.getAllSchedule();
+    }
+
+    @DeleteMapping(path = "/timetable")
+    public String deleteSchedule() {
+        return securityService.deleteSchedule();
+    }
 }

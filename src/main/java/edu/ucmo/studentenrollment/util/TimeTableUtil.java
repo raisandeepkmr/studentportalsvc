@@ -47,9 +47,16 @@ public class TimeTableUtil {
 
     //Use this method to get all the class timing
     public List<Date> timeTableTiming() {
+        Calendar calendar = Calendar.getInstance();
         List<Date> daySched = new ArrayList<>();
-        Date endTime = new Date(classStartTime.getTime() + TimeUnit.HOURS.toMillis(12));
-        Date eachClass = new Date(classStartTime.getTime());
+        Date testTime = new Date(classStartTime.getTime());
+        calendar.setTime(testTime);
+        while(calendar.get(Calendar.DAY_OF_WEEK) != 2) {
+            testTime = new Date(testTime.getTime() + TimeUnit.DAYS.toMillis(1));
+            calendar.setTime(testTime);
+        }
+        Date endTime = new Date(testTime.getTime() + TimeUnit.HOURS.toMillis(12));
+        Date eachClass = new Date(testTime.getTime());
         while(eachClass.getTime() <= endTime.getTime()) {
             daySched.add(eachClass);
             eachClass = new Date(eachClass.getTime() + TimeUnit.HOURS.toMillis(2) + TimeUnit.MINUTES.toMillis(50));
@@ -66,7 +73,7 @@ public class TimeTableUtil {
         for(Date eachDay = starTime;eachDay.getTime() <= endTime.getTime(); eachDay = new Date(eachDay.getTime() + TimeUnit.DAYS.toMillis(1))){
             calendar.setTime(eachDay);
             if(calendar.get(Calendar.DAY_OF_WEEK) == 2) skipStartBuffer = false;
-            if(skipStartBuffer || calendar.get(Calendar.DAY_OF_WEEK) == 1 || calendar.get(Calendar.DAY_OF_WEEK) == 7) continue;
+            if(skipStartBuffer || calendar.get(Calendar.DAY_OF_WEEK) == 1 || calendar.get(Calendar.DAY_OF_WEEK) == 7);
             else {
                 weekDays.put(dayInd, eachDay);
                 dayInd++;
@@ -97,25 +104,34 @@ public class TimeTableUtil {
 
     private void assignRoomAndTime(List<String> rooms) {
         for(String room: rooms) {
-            Map<Integer, Boolean> timeRecords = new HashMap<>();
-            timeRecords.put(0, false);
-            timeRecords.put(1, false);
-            timeRecords.put(2, false);
-            timeRecords.put(3, false);
-            timeRecords.put(4, false);
-            TimeInRoom timeInRoom = new TimeInRoom();
-            timeInRoom.setTimeBooked(timeRecords);
-
-            Map<Integer, TimeInRoom> dayTimes = new HashMap<>();
-            dayTimes.put(0, timeInRoom);
-            dayTimes.put(1, timeInRoom);
-            dayTimes.put(2, timeInRoom);
-            dayTimes.put(3, timeInRoom);
-            dayTimes.put(4, timeInRoom);
-            DayAndRoom dayAndRoom = new DayAndRoom();
-            dayAndRoom.setTimeBooked(room, dayTimes);
+            TimeInRoom timeInRoom = getTimeInRooms();
+            DayAndRoom dayAndRoom = getDayAndRoom(room, timeInRoom);
             this.dayAndRooms.add(dayAndRoom);
         }
+    }
+
+    private DayAndRoom getDayAndRoom(String room, TimeInRoom timeInRoom) {
+        Map<Integer, TimeInRoom> dayTimes = new HashMap<>();
+        dayTimes.put(0, timeInRoom);
+        dayTimes.put(1, timeInRoom);
+        dayTimes.put(2, timeInRoom);
+        dayTimes.put(3, timeInRoom);
+        dayTimes.put(4, timeInRoom);
+        DayAndRoom dayAndRoom = new DayAndRoom();
+        dayAndRoom.setTimeBooked(room, dayTimes);
+        return dayAndRoom;
+    }
+
+    private TimeInRoom getTimeInRooms() {
+        Map<Integer, Boolean> timeRecords = new HashMap<>();
+        timeRecords.put(0, true);
+        timeRecords.put(1, true);
+        timeRecords.put(2, true);
+        timeRecords.put(3, true);
+        timeRecords.put(4, true);
+        TimeInRoom timeInRoom = new TimeInRoom();
+        timeInRoom.setTimeBooked(timeRecords);
+        return timeInRoom;
     }
 
     public String getRoomSlot(Integer dayInd) {
@@ -127,7 +143,10 @@ public class TimeTableUtil {
                 if(theDay == dayInd) {
                     Map<Integer, Boolean> timesAvailable = timesInRoom.get(theDay).getTimeBooked();
                     for(Integer availableTime: timesAvailable.keySet()) {
-                        if(timesAvailable.get(availableTime)) return room + "," + availableTime;//timesAvailable.put(availableTime, true);
+                        if(timesAvailable.get(availableTime)) {
+                            timesAvailable.put(availableTime, false);
+                            return room + "," + availableTime;//timesAvailable.put(availableTime, true);
+                        }
                     }
                 }
             }
