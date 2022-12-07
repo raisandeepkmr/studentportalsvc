@@ -1,13 +1,15 @@
 package edu.ucmo.studentenrollment.control;
 
+import edu.ucmo.studentenrollment.model.Section;
 import edu.ucmo.studentenrollment.model.common.LoginRequest;
 import edu.ucmo.studentenrollment.model.common.LoginResponse;
 import edu.ucmo.studentenrollment.service.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping(path="login", produces = "application/json", consumes = "application/json")
 public class SecurityController {
     @Autowired
@@ -19,7 +21,12 @@ public class SecurityController {
     }
 
     @GetMapping
-    public LoginResponse check_token(@PathVariable String sp_token) {
+    public LoginResponse checkToken(@PathVariable String sp_token) {
         return securityService.tokenCheck(sp_token);
+    }
+
+    @GetMapping(path = "/timetable")
+    public List<Section> generateSchedule() {
+        return securityService.generateSchedule();
     }
 }

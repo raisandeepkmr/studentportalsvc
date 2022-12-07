@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class LoginResponse {
-    String number;
+public class ScheduleResponse {
+    String courseId;
     String token;
     String token_expiry;
     String userType;

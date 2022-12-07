@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
 
 public interface AdminRepository extends MongoRepository<Admin, String> {
-    @Query("{name: '?0'}")
-    Admin findAdminByName(String name);
+    @Query("{email: '?0'}")
+    Admin findAdminByEmail(String email);
     List<Admin> findAll();
 }

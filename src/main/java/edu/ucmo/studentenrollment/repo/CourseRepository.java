@@ -12,6 +12,6 @@ public interface CourseRepository extends MongoRepository<Course, String> {
     Course findCourseByCode(String code);
     List<Course> findAll();
     Course save(Course course);
-    @DeleteQuery("{code: '?0'}")
-    Course deleteCourseByCode(String code);
+    @DeleteQuery("{courseId: '?0'}")
+    Course deleteCourseByCode(String courseId);
 }

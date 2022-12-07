@@ -1,10 +1,12 @@
 package edu.ucmo.studentenrollment.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@NoArgsConstructor
 @Document("section")
 public class Section {
     @Id
@@ -14,6 +16,7 @@ public class Section {
     private String availableSpace;
     private String facultyId;
     private String time;
+    private String days;
 
     public Section(String id, String courseId, String roomId, String availableSpace, String facultyId, String time) {
         this.id = id;

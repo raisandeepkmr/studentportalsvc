@@ -17,8 +17,12 @@ public class StudentService {
     @Autowired
     UtilCollectionRepository utilCollectionRepository;
 
-    public Student getStudent(String name) {
+    public Student getStudentByName(String name) {
         return studentRepository.findStudentByName(name);
+    }
+
+    public Student getStudentByNumber(String number) {
+        return studentRepository.findStudentByNumber(number);
     }
 
     public Student getStudentByEmail(String email) {
@@ -34,6 +38,14 @@ public class StudentService {
         utilCollectionRepository.save(utilCollection);
         student.setNumber(CommonUtil.paddedNumber((long) studentNum));
         return studentRepository.save(student);
+    }
+
+    public Student updateStudent(Student student) {
+        Student existingStudent = getStudentByEmail(student.getEmail());
+        if(existingStudent == null) throw new NotFoundException("User not found to update!");
+        existingStudent.setName(student.getName());
+        existingStudent.setPassword(student.getPassword());
+        return studentRepository.save(existingStudent);
     }
 
     public Student deleteStudent(String number) {

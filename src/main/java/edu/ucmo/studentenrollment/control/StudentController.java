@@ -6,20 +6,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping(path = "student", produces = "application/json", consumes = "application/json")
 public class StudentController {
     @Autowired
     StudentService studentService;
 
-    @GetMapping(path = "/{name}")
-    public Student getStudent(@PathVariable String name) {
-        return studentService.getStudent(name);
+    @GetMapping(path = "/name/{name}")
+    public Student getStudentByName(@PathVariable String name) {
+        return studentService.getStudentByName(name);
+    }
+
+    @GetMapping(path = "/number/{number}")
+    public Student getStudentByNumber(@PathVariable String number) {
+        return studentService.getStudentByNumber(number);
     }
 
     @PostMapping
     public Student saveStudent(@RequestBody Student student) {
         return studentService.saveStudent(student);
+    }
+
+    @PutMapping
+    public Student updateStudent(@RequestBody Student student) {
+        return studentService.updateStudent(student);
     }
 
     @DeleteMapping("/{number}")

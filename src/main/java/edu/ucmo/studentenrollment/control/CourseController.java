@@ -5,16 +5,22 @@ import edu.ucmo.studentenrollment.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping(path = "course", produces = "application/json", consumes = "application/json")
 public class CourseController {
     @Autowired
     CourseService courseService;
 
-    @GetMapping(path = "/{name}")
+    @GetMapping(path = "/name/{name}")
     public Course getCourse(@PathVariable String code) {
         return courseService.getCourse(code);
+    }
+
+    @GetMapping
+    public List<Course> getAllCourse() {
+        return courseService.getAllCourses();
     }
 
     @PostMapping
@@ -22,8 +28,8 @@ public class CourseController {
         return courseService.saveCourse(course);
     }
 
-    @DeleteMapping("/{number}")
-    public Course deleteCourse(@PathVariable String code) {
-        return courseService.deleteCourse(code);
+    @DeleteMapping("/courseId/{courseId}")
+    public Course deleteCourse(@PathVariable String courseId) {
+        return courseService.deleteCourse(courseId);
     }
 }

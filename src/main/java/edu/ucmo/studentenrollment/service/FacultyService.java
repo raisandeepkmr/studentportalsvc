@@ -11,6 +11,8 @@ import edu.ucmo.studentenrollment.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FacultyService {
     @Autowired
@@ -18,8 +20,16 @@ public class FacultyService {
     @Autowired
     UtilCollectionRepository utilCollectionRepository;
 
-    public Faculty getFaculty(String name) {
+    public Faculty getFacultyByName(String name) {
         return facultyRepository.findFacultyByName(name);
+    }
+
+    public List<Faculty> getAllFaculty() {
+        return facultyRepository.findAll();
+    }
+
+    public Faculty getFacultyByNumber(String number) {
+        return facultyRepository.findFacultyByNumber(number);
     }
 
     public Faculty getFacultyByEmail(String email) {
