@@ -7,8 +7,10 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
 
 public interface SectionRepository extends MongoRepository<Section, String> {
-    @Query("{sectionId: '?0'}")
+    @Query("{id: '?0'}")
     Section findSectionBySectionId(String sectionId);
+    @Query("{roomId: '?0'}")
+    List<Section> findSectionByRoomId(String roomId);
     List<Section> findAll();
     Section save(Section section);
     Section save(List<Section> sections);

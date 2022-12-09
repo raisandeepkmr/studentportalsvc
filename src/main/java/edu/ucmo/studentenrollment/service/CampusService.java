@@ -37,4 +37,8 @@ public class CampusService {
     public Campus deleteCampus(String id) {
         return campusRepository.deleteCampusById(id);
     }
+
+    public ClassRoom deleteRoom(String name) {
+        return classRoomRepository.deleteByRoomName(name);
+    }
 }

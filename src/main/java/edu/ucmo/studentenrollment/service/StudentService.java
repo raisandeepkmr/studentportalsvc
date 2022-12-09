@@ -10,6 +10,8 @@ import edu.ucmo.studentenrollment.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StudentService {
     @Autowired
@@ -19,6 +21,10 @@ public class StudentService {
 
     public Student getStudentByName(String name) {
         return studentRepository.findStudentByName(name);
+    }
+
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
     }
 
     public Student getStudentByNumber(String number) {

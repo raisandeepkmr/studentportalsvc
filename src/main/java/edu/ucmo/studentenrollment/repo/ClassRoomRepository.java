@@ -9,5 +9,7 @@ import java.util.List;
 public interface ClassRoomRepository extends MongoRepository<ClassRoom, String> {
     @Query("{name: '?0'}")
     ClassRoom findClassRoomByName(String name);
+    @Query("{name: '?0'}")
+    ClassRoom deleteByRoomName(String name);
     List<ClassRoom> findAll();
 }

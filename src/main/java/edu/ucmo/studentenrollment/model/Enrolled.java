@@ -11,16 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Enrolled {
     @Id
     private String id;
-    private String date;
-    private String time;
-    private String year;
-    private String grade;
-
-    public Enrolled(String id, String date, String time, String year, String grade) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.year = year;
-        this.grade = grade;
-    }
+    private String scheduleId;
+    private String studentId;
+    private String roomId;
 }

@@ -5,6 +5,8 @@ import edu.ucmo.studentenrollment.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "student", produces = "application/json", consumes = "application/json")
 public class StudentController {
@@ -14,6 +16,11 @@ public class StudentController {
     @GetMapping(path = "/name/{name}")
     public Student getStudentByName(@PathVariable String name) {
         return studentService.getStudentByName(name);
+    }
+
+    @GetMapping
+    public List<Student> getAllStudents() {
+        return studentService.getAllStudents();
     }
 
     @GetMapping(path = "/number/{number}")

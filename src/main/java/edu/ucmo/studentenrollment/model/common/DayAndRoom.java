@@ -1,9 +1,10 @@
 package edu.ucmo.studentenrollment.model.common;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DayAndRoom {
+public class DayAndRoom implements Serializable {
     String roomCode;
     Map<Integer, TimeInRoom> dayBooked = new HashMap<>();
 

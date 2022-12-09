@@ -1,18 +1,28 @@
 package edu.ucmo.studentenrollment.service;
 
-import edu.ucmo.studentenrollment.model.Course;
-import edu.ucmo.studentenrollment.model.UtilCollection;
-import edu.ucmo.studentenrollment.repo.CourseRepository;
-import edu.ucmo.studentenrollment.repo.UtilCollectionRepository;
+import edu.ucmo.studentenrollment.exceptions.CannotAssignException;
+import edu.ucmo.studentenrollment.exceptions.ClassFullException;
+import edu.ucmo.studentenrollment.model.*;
+import edu.ucmo.studentenrollment.model.common.AssignCourse;
+import edu.ucmo.studentenrollment.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CourseService {
     @Autowired
     CourseRepository courseRepository;
+    @Autowired
+    EnrolledRepository enrolledRepository;
+    @Autowired
+    ClassRoomRepository classRoomRepository;
+    @Autowired
+    SectionRepository sectionRepository;
+    @Autowired
+    StudentRepository studentRepository;
     @Autowired
     UtilCollectionRepository utilCollectionRepository;
 
@@ -31,6 +41,25 @@ public class CourseService {
         utilCollectionRepository.save(utilCollection);
         course.setCourseId(String.valueOf(courseNum));
         return courseRepository.save(course);
+    }
+
+    public Enrolled assignCourse(AssignCourse assignCourse) {
+        List<Enrolled> enrolled = enrolledRepository.findEnroledByStudent(assignCourse.getStudentId());
+        Student student = studentRepository.findStudentByNumber(assignCourse.getStudentId());
+        Section section = sectionRepository.findSectionBySectionId(assignCourse.getScheduleId());
+        if(enrolled != null && enrolled.size() > 0) {
+            if(enrolled.size() >= 2) throw new CannotAssignException("Student already has maximum allowed courses");
+            ClassRoom classRoom = classRoomRepository.findClassRoomByName(section.getRoomId());
+            List<Enrolled> enrolledInRoom = enrolledRepository.findEnroledByRoom(section.getRoomId());
+            if(enrolledInRoom.size() >= Integer.parseInt(classRoom.getCapacity())) throw new ClassFullException("This class is fully booked");
+        }
+        Enrolled enrolledNew = new Enrolled();
+        enrolledNew.setStudentId(student.getNumber());
+        enrolledNew.setScheduleId(section.getId());
+        enrolledNew.setRoomId(section.getRoomId());
+        student.setNumCourses(String.valueOf(Integer.parseInt(student.getNumCourses()) + 1));
+        studentRepository.save(student);
+        return enrolledRepository.save(enrolledNew);
     }
 
     public Course deleteCourse(String courseId) {

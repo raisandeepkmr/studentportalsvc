@@ -2,6 +2,7 @@ package edu.ucmo.studentenrollment.util;
 
 import edu.ucmo.studentenrollment.model.common.DayAndRoom;
 import edu.ucmo.studentenrollment.model.common.TimeInRoom;
+import org.springframework.util.SerializationUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -117,7 +118,7 @@ public class TimeTableUtil {
         dayTimes.put(2, timeInRoom);
         dayTimes.put(3, timeInRoom);
         dayTimes.put(4, timeInRoom);
-        DayAndRoom dayAndRoom = new DayAndRoom();
+        DayAndRoom dayAndRoom = getDayAndRoomObj();
         dayAndRoom.setTimeBooked(room, dayTimes);
         return dayAndRoom;
     }
@@ -129,7 +130,7 @@ public class TimeTableUtil {
         timeRecords.put(2, true);
         timeRecords.put(3, true);
         timeRecords.put(4, true);
-        TimeInRoom timeInRoom = new TimeInRoom();
+        TimeInRoom timeInRoom = getTimeInRoomObj();
         timeInRoom.setTimeBooked(timeRecords);
         return timeInRoom;
     }
@@ -157,5 +158,15 @@ public class TimeTableUtil {
 
     public Map<Integer, Date> getWeekDays() {
         return weekDays;
+    }
+
+    private TimeInRoom getTimeInRoomObj() {
+        TimeInRoom timeInRoom = new TimeInRoom();
+        return (TimeInRoom) SerializationUtils.clone(timeInRoom);
+    }
+
+    private DayAndRoom getDayAndRoomObj() {
+        DayAndRoom dayAndRoom = new DayAndRoom();
+        return (DayAndRoom) SerializationUtils.clone(dayAndRoom);
     }
 }

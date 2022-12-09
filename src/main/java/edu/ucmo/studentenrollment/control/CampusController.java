@@ -34,8 +34,12 @@ public class CampusController {
         return campusService.saveCampus(campus);
     }
 
-    @DeleteMapping("/{number}")
-    public Campus deleteCampus(@PathVariable String campus_id) {
-        return campusService.deleteCampus(campus_id);
+    @DeleteMapping("/{campusId}")
+    public Campus deleteCampus(@PathVariable String campusId) {
+        return campusService.deleteCampus(campusId);
+    }
+    @DeleteMapping("/room/{roomId}")
+    public ClassRoom deleteRoom(@PathVariable String roomId) {
+        return campusService.deleteRoom(roomId);
     }
 }
