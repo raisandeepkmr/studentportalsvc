@@ -4,14 +4,17 @@ import edu.ucmo.studentenrollment.model.common.DayAndRoom;
 import edu.ucmo.studentenrollment.model.common.TimeInRoom;
 import org.springframework.util.SerializationUtils;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class TimeTableUtil {
     private List<DayAndRoom> dayAndRooms = new ArrayList<>();
+    SimpleDateFormat sf = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
     Map<Integer, Date> weekDays = new HashMap<>();
     Date classStartTime = null;
     List<String> courses;
@@ -168,5 +171,16 @@ public class TimeTableUtil {
     private DayAndRoom getDayAndRoomObj() {
         DayAndRoom dayAndRoom = new DayAndRoom();
         return (DayAndRoom) SerializationUtils.clone(dayAndRoom);
+    }
+
+    public static String getDayTiming(int ind) {
+        List<LocalTime> timings = new ArrayList<>();
+        timings.add(LocalTime.of(6,0,0));
+        timings.add(LocalTime.of(8,50,0));
+        timings.add(LocalTime.of(11,40,0));
+        timings.add(LocalTime.of(14,30,0));
+        timings.add(LocalTime.of(17,20,0));
+
+        return timings.get(ind).toString();
     }
 }

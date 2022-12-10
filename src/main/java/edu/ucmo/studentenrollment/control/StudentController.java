@@ -1,6 +1,8 @@
 package edu.ucmo.studentenrollment.control;
 
+import edu.ucmo.studentenrollment.model.ScheduleDetail;
 import edu.ucmo.studentenrollment.model.Student;
+import edu.ucmo.studentenrollment.model.common.ScheduleVO;
 import edu.ucmo.studentenrollment.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,11 @@ public class StudentController {
     @GetMapping(path = "/number/{number}")
     public Student getStudentByNumber(@PathVariable String number) {
         return studentService.getStudentByNumber(number);
+    }
+
+    @GetMapping(path = "/schedule/{number}")
+    public List<ScheduleVO> getScheduleByStudent(@PathVariable String number) {
+        return studentService.getScheduleByStudent(number);
     }
 
     @PostMapping

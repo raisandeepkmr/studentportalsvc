@@ -2,20 +2,28 @@ package edu.ucmo.studentenrollment.service;
 
 import edu.ucmo.studentenrollment.exceptions.NotFoundException;
 import edu.ucmo.studentenrollment.exceptions.ResourceConflictException;
-import edu.ucmo.studentenrollment.model.Student;
-import edu.ucmo.studentenrollment.model.UtilCollection;
-import edu.ucmo.studentenrollment.repo.StudentRepository;
-import edu.ucmo.studentenrollment.repo.UtilCollectionRepository;
+import edu.ucmo.studentenrollment.model.*;
+import edu.ucmo.studentenrollment.model.common.ScheduleVO;
+import edu.ucmo.studentenrollment.repo.*;
 import edu.ucmo.studentenrollment.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class StudentService {
     @Autowired
     StudentRepository studentRepository;
+    @Autowired
+    CourseRepository courseRepository;
+    @Autowired
+    FacultyRepository facultyRepository;
+    @Autowired
+    EnrolledRepository enrolledRepository;
+    @Autowired
+    ScheduleDetailsRepository scheduleDetailsRepository;
     @Autowired
     UtilCollectionRepository utilCollectionRepository;
 
@@ -29,6 +37,25 @@ public class StudentService {
 
     public Student getStudentByNumber(String number) {
         return studentRepository.findStudentByNumber(number);
+    }
+
+    public List<ScheduleVO> getScheduleByStudent(String number) {
+        List<Enrolled> enrolleds = enrolledRepository.findEnroledByStudent(number);
+        List<ScheduleVO> scheduleDetails = new ArrayList<>();
+        for(Enrolled enrolled: enrolleds) {
+            ScheduleDetail detail = scheduleDetailsRepository.findScheduleDetailById(enrolled.getScheduleId());
+            Course course = courseRepository.findCourseById(detail.getCourseId());
+            Faculty faculty = facultyRepository.findFacultyByNumber(detail.getFacultyId());
+            ScheduleVO vo = ScheduleVO.builder()
+                    .schedulId(detail.getScheduleId())
+                    .classTime(detail.getTime())
+                    .courseName(course.getName())
+                    .facultyName(faculty.getName())
+                    .classDate(detail.getDate().toString())
+                    .build();
+            scheduleDetails.add(vo);
+        }
+        return scheduleDetails;
     }
 
     public Student getStudentByEmail(String email) {
@@ -51,6 +78,9 @@ public class StudentService {
         if(existingStudent == null) throw new NotFoundException("User not found to update!");
         existingStudent.setName(student.getName());
         existingStudent.setPassword(student.getPassword());
+        existingStudent.setPhone(student.getPhone());
+        existingStudent.setAddress(student.getAddress());
+        existingStudent.setDob(student.getDob());
         return studentRepository.save(existingStudent);
     }
 

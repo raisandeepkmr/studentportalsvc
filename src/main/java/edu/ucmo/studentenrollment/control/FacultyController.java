@@ -1,6 +1,7 @@
 package edu.ucmo.studentenrollment.control;
 
 import edu.ucmo.studentenrollment.model.Faculty;
+import edu.ucmo.studentenrollment.model.Student;
 import edu.ucmo.studentenrollment.service.FacultyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +29,19 @@ public class FacultyController {
         return facultyService.getFacultyByNumber(number);
     }
 
+    @GetMapping(path = "/students/{number}")
+    public List<Student> getFacultyStudents(@PathVariable String number) {
+        return facultyService.getStudentsByFaculty(number);
+    }
+
     @PostMapping
     public Faculty saveFaculty(@RequestBody Faculty faculty) {
         return facultyService.saveFaculty(faculty);
+    }
+
+    @PutMapping
+    public Faculty updateFaculty(@RequestBody Faculty faculty) {
+        return facultyService.updateFaculty(faculty);
     }
 
     @DeleteMapping("/{number}")

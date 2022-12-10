@@ -9,6 +9,8 @@ import java.util.List;
 public interface EnrolledRepository extends MongoRepository<Enrolled, String> {
     @Query("{studentId: '?0'}")
     List<Enrolled> findEnroledByStudent(String studentId);
+    @Query("{scheduleId: '?0'}")
+    List<Enrolled> findEnroledByScheduleId(String scheduleId);
     @Query("{roomId: '?0'}")
     List<Enrolled> findEnroledByRoom(String roomId);
     @Query("{scheduleId: '?0'}")

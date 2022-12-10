@@ -34,10 +34,10 @@ public class CampusController {
         return campusService.saveCampus(campus);
     }
 
-    @DeleteMapping("/{campusId}")
-    public Campus deleteCampus(@PathVariable String campusId) {
-        return campusService.deleteCampus(campusId);
-    }
+//    @DeleteMapping("/{campusId}")
+//    public Campus deleteCampus(@PathVariable String campusId) {
+//        return campusService.deleteCampus(campusId);
+//    }
     @DeleteMapping("/room/{roomId}")
     public ClassRoom deleteRoom(@PathVariable String roomId) {
         return campusService.deleteRoom(roomId);

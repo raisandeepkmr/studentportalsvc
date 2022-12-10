@@ -10,6 +10,8 @@ import java.util.List;
 public interface CourseRepository extends MongoRepository<Course, String> {
     @Query("{code: '?0'}")
     Course findCourseByCode(String code);
+    @Query("{courseId: '?0'}")
+    Course findCourseById(String courseId);
     List<Course> findAll();
     Course save(Course course);
     @DeleteQuery("{courseId: '?0'}")

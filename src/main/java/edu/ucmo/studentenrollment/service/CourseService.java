@@ -14,6 +14,8 @@ import java.util.List;
 @Service
 public class CourseService {
     @Autowired
+    ScheduleDetailsRepository scheduleDetailsRepository;
+    @Autowired
     CourseRepository courseRepository;
     @Autowired
     EnrolledRepository enrolledRepository;
@@ -28,6 +30,10 @@ public class CourseService {
 
     public Course getCourse(String code) {
         return courseRepository.findCourseByCode(code);
+    }
+
+    public Course getCourseById(String courseId) {
+        return courseRepository.findCourseById(courseId);
     }
 
     public List<Course> getAllCourses() {
@@ -46,17 +52,17 @@ public class CourseService {
     public Enrolled assignCourse(AssignCourse assignCourse) {
         List<Enrolled> enrolled = enrolledRepository.findEnroledByStudent(assignCourse.getStudentId());
         Student student = studentRepository.findStudentByNumber(assignCourse.getStudentId());
-        Section section = sectionRepository.findSectionBySectionId(assignCourse.getScheduleId());
+        ScheduleDetail scheduleDetail = scheduleDetailsRepository.findScheduleDetailById(assignCourse.getScheduleId());
         if(enrolled != null && enrolled.size() > 0) {
             if(enrolled.size() >= 2) throw new CannotAssignException("Student already has maximum allowed courses");
-            ClassRoom classRoom = classRoomRepository.findClassRoomByName(section.getRoomId());
-            List<Enrolled> enrolledInRoom = enrolledRepository.findEnroledByRoom(section.getRoomId());
+            ClassRoom classRoom = classRoomRepository.findClassRoomByName(scheduleDetail.getRoomId());
+            List<Enrolled> enrolledInRoom = enrolledRepository.findEnroledByRoom(scheduleDetail.getRoomId());
             if(enrolledInRoom.size() >= Integer.parseInt(classRoom.getCapacity())) throw new ClassFullException("This class is fully booked");
         }
         Enrolled enrolledNew = new Enrolled();
         enrolledNew.setStudentId(student.getNumber());
-        enrolledNew.setScheduleId(section.getId());
-        enrolledNew.setRoomId(section.getRoomId());
+        enrolledNew.setScheduleId(scheduleDetail.getId());
+        enrolledNew.setRoomId(scheduleDetail.getRoomId());
         student.setNumCourses(String.valueOf(Integer.parseInt(student.getNumCourses()) + 1));
         studentRepository.save(student);
         return enrolledRepository.save(enrolledNew);
